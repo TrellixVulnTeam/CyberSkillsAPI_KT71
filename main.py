@@ -59,14 +59,24 @@ def scrapeEventPage(url, month=None, year=None, headless=True):
     driver.get(mainEventPage)
 
     if month and year:
-        selectMonthAndYear(driver, month, year)
-        loadMore(driver)
+        if isinstance(month, list) and isinstance(year, list):
+            sourceCollection = {}
+            for exactYear in year:
+                for exactMonth in month:
+                    selectMonthAndYear(driver, exactMonth, exactYear)
+                    loadMore(driver)
+                    sourceCollection[f"{exactYear};{exactMonth}"] = driver.page_source
 
-    pageSource = driver.page_source
+        else:
+            selectMonthAndYear(driver, month, year)
+            loadMore(driver)
+            sourceCollection = driver.page_source
+    else:
+        sourceCollection = driver.page_source
 
     driver.quit()
 
-    return pageSource
+    return sourceCollection
 
 def extractCurrentMonth(pageSoup):
     secondMonthTitle = pageSoup.select("div.mec-month-divider")[1]
