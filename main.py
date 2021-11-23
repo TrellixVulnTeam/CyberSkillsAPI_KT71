@@ -9,11 +9,32 @@ from selenium import webdriver
 # Used for running the browser headlessly
 from selenium.webdriver.firefox.options import Options
 
+# For changing the year and month
+from selenium.webdriver.support.ui import Select
+
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait as wait
+from selenium.webdriver.common.by import By
+
 from pathlib import Path
+
+import time
 
 mainEventPage = "https://community.cyberskills.dk/cyberskills-events/"
 
-def scrapeEventPage(url, headless=True):
+def selectMonthAndYear(driver, month, year):
+
+    yearSelector = Select(driver.find_element_by_id("mec_sf_year_902"))
+    if year:
+        yearSelector.select_by_visible_text(year)
+
+    monthSelector = Select(wait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#mec_sf_month_902"))))
+    if month:
+        monthSelector.select_by_visible_text(month)
+
+    time.sleep(1)
+
+def scrapeEventPage(url, month=None, year=None, headless=True):
 
     # Setting the options for running the browser driver headlessly so it doesn't pop up when running the script
     driverOptions = Options()
@@ -23,6 +44,9 @@ def scrapeEventPage(url, headless=True):
     driver = webdriver.Firefox(options=driverOptions, executable_path=Path("./geckodriver").resolve())
 
     driver.get(mainEventPage)
+
+    if month and year:
+        selectMonthAndYear(driver, month, year)
 
     pageSource = driver.page_source
 
