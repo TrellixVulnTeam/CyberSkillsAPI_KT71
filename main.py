@@ -1,5 +1,8 @@
 #!/usr/bin/python3
 
+# For parsing html
+from bs4 import BeautifulSoup as bs
+
 # Used for dynamically scraping pages that aren't static
 from selenium import webdriver
 
@@ -27,3 +30,25 @@ def scrapeEventPage(url, headless=True):
 
     return pageSource
 
+def extractEventDetails(pageSoup):
+
+    events = []
+
+    for eventBox in pageSoup.select("div.mec-topsec"):
+        currentEvent = {}
+        currentEvent["imageURL"] = eventBox.select("img.wp-post-image")[0].get("src")
+
+        eventTitle = eventBox.select("h3.mec-event-title")[0].select("a")[0]
+        currentEvent["eventURL"] = eventTitle.get("href")
+        currentEvent["title"] = eventTitle.text.strip('\n')
+
+        currentEvent["description"] = eventBox.select("div.mec-event-description")[0].text.strip('\n')
+
+        eventMetaData = eventBox.select("div.mec-event-meta")[0]
+        currentEvent["date"] = eventMetaData.select("div.mec-date-details")[0].text.strip('\n')
+        currentEvent["time"] = eventMetaData.select("div.mec-time-details")[0].text.strip('\n')
+        currentEvent["location"] = eventMetaData.select("div.mec-venue-details")[0].text.strip('\n')
+
+        events.append(currentEvent)
+
+    return events
