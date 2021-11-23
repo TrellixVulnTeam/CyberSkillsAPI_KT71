@@ -136,10 +136,20 @@ def listDetails():
 
     return detailCollection
 
-
 def listEvents(month, year):
     pageSoup = bs(scrapeEventPage(mainEventPage, month, year, headless=True), "html.parser")
 
     currentMonthSoup = extractCurrentMonth(pageSoup)
 
     return extractEventDetails(currentMonthSoup)
+
+def listEventsForAllTime():
+    details = listDetails()
+
+    sourceCollection = scrapeEventPage(mainEventPage, month=details["month"], year=["2021"])
+
+    for source in sourceCollection:
+        year = source.split(";")[0]
+        month = source.split(";")[1]
+        currentMonthSoup = extractCurrentMonth(bs(sourceCollection[source], "html.parser"))
+        writeEventsToFile(year, month, extractEventDetails(currentMonthSoup))
