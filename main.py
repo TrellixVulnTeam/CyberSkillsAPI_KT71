@@ -155,3 +155,6 @@ def listEventsForAllTime():
         month = source.split(";")[1]
         currentMonthSoup = extractCurrentMonth(bs(sourceCollection[source], "html.parser"))
         writeEventsToFile(year, month, extractEventDetails(currentMonthSoup))
+
+if __name__ == "__main__":
+    listEventsForAllTime()
