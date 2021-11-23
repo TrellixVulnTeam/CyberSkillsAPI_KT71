@@ -14,6 +14,9 @@ def listAllowedDates():
         allowedDates.append({ "year" : year, "month" : month })
     return allowedDates
 
+@app.route("/allowedDates")
+def showAllowedDates():
+    return Response(json.dumps(listAllowedDates()), mimetype="application/json")
 
 @app.route("/<string:year>/<string:month>/")
 def sendEventsJSON(year, month):
