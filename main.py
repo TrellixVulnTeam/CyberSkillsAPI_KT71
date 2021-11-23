@@ -18,6 +18,7 @@ from selenium.webdriver.common.by import By
 
 from pathlib import Path
 
+import json
 import time
 
 mainEventPage = "https://community.cyberskills.dk/cyberskills-events/"
@@ -98,3 +99,10 @@ def extractEventDetails(pageSoup):
         events.append(currentEvent)
 
     return events
+
+def listEvents(month, year):
+    pageSoup = bs(scrapeEventPage(mainEventPage, month, year, headless=True), "html.parser")
+
+    currentMonthSoup = extractCurrentMonth(pageSoup)
+
+    return extractEventDetails(currentMonthSoup)
