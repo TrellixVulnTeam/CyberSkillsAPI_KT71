@@ -68,6 +68,14 @@ def scrapeEventPage(url, month=None, year=None, headless=True):
 
     return pageSource
 
+def extractCurrentMonth(pageSoup):
+    secondMonthTitle = pageSoup.select("div.mec-month-divider")[1]
+    laterEvents = secondMonthTitle.find_all_next("div")
+    for event in laterEvents:
+        event.decompose()
+
+    return pageSoup
+
 def extractEventDetails(pageSoup):
 
     events = []
