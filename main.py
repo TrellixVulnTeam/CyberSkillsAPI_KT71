@@ -76,6 +76,7 @@ def scrapeEventPage(url, month=None, year=None, headless=True):
             sourceCollection = {}
             for exactYear in year:
                 for exactMonth in month:
+                    print(exactYear, exactMonth)
                     selectMonthAndYear(driver, exactMonth, exactYear)
                     loadMore(driver)
                     sourceCollection[f"{exactYear};{exactMonth}"] = driver.page_source
