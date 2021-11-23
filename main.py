@@ -100,6 +100,17 @@ def extractEventDetails(pageSoup):
 
     return events
 
+def listDetails():
+    pageSoup = bs(scrapeEventPage(mainEventPage), "html.parser")
+
+    detailCollection = {}
+
+    for detailName in ["year", "month"]:
+        detailCollection[detailName] = [ detail.text for detail in pageSoup.select(f"select#mec_sf_{detailName}_902")[0].select("option") if detail and detail.get("value").isnumeric() ]
+
+    return detailCollection
+
+
 def listEvents(month, year):
     pageSoup = bs(scrapeEventPage(mainEventPage, month, year, headless=True), "html.parser")
 
