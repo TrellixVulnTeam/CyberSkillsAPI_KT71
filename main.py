@@ -21,7 +21,20 @@ from pathlib import Path
 import json
 import time
 
+import re
+
+filePathPattern = re.compile('[^a-zA-Z0-9]')
+
 mainEventPage = "https://community.cyberskills.dk/cyberskills-events/"
+
+def writeEventsToFile(year, month, contents):
+    year = filePathPattern.sub("", year)
+    month = filePathPattern.sub("", month)
+
+    fullPath = f"./events/{year};{month}.json"
+
+    with open(Path(fullPath).resolve(), "w") as eventFile:
+        json.dump(contents, eventFile)
 
 def selectMonthAndYear(driver, month, year):
 
