@@ -1,8 +1,10 @@
 #!/usr/bin/python3
-from flask import Flask, Response
+from flask import Flask, Response, redirect, url_for
 
 import json
 import os
+
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -14,7 +16,7 @@ def listAllowedDates():
         allowedDates.append({ "year" : year, "month" : month })
     return allowedDates
 
-@app.route("/allowedDates")
+@app.route("/allowedDates/")
 def showAllowedDates():
     return Response(json.dumps(listAllowedDates()), mimetype="application/json")
 
@@ -25,6 +27,12 @@ def sendEventsJSON(year, month):
             return Response(json.dumps(json.load(eventFile)), mimetype="application/json")
     else:
         return "Didn't recognize either year or month", 422
+
+@app.route("/currentEvents/")
+def listCurrentEvents():
+    return redirect(url_for("sendEventsJSON", year=str(datetime.now().year), month=str(datetime.now().strftime("%B"))))
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
