@@ -21,11 +21,27 @@ from pathlib import Path
 import json
 import time
 
+# For handling the folders
+import os
+
 import re
 
 filePathPattern = re.compile('[^a-zA-Z0-9]')
 
 mainEventPage = "https://community.cyberskills.dk/cyberskills-events/"
+
+def createFolder(folderName):
+    if not os.path.isdir(Path("./" + folderName)):
+        try:
+            os.mkdir(Path("./" + folderName), mode=0o755)
+        except:
+            # This shoudln't ever be reached, as it would imply that the folder doesn't exist, but the script also is unable to create it. Could possibly be missing read permissions if the scripts catches this exception
+            raise Exception("The folder {} couldn't be created, exiting".format(folderName))
+    else:
+        try:
+            os.chmod(Path("./" + folderName), 0o755)
+        except:
+            raise Exception("Failed to set the 755 permissions on {}, either remove the folder or set the right perms yourself and try again.".format(folderName))
 
 def writeEventsToFile(year, month, contents):
     year = filePathPattern.sub("", year)
