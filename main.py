@@ -33,10 +33,9 @@ def selectMonthAndYear(driver, month, year):
     if month:
         monthSelector.select_by_visible_text(month)
 
-    time.sleep(1)
+    time.sleep(3)
 
 def loadMore(driver):
-    time.sleep(10)
     # Will check if theres more than one title stating the month for the following content. If there is, that means that the page has already loaded the whole month, as the start of the next one is already loaded, and it can skip pressing the "Load More" button
     if not len(driver.find_elements_by_css_selector("div.mec-month-divider")) > 1:
         # Will make sure that the button is present before trying to wait for it to be click-able, as this will otherwise timeout
