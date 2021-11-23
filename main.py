@@ -34,6 +34,19 @@ def selectMonthAndYear(driver, month, year):
 
     time.sleep(1)
 
+def loadMore(driver):
+    time.sleep(10)
+    # Will check if theres more than one title stating the month for the following content. If there is, that means that the page has already loaded the whole month, as the start of the next one is already loaded, and it can skip pressing the "Load More" button
+    if not len(driver.find_elements_by_css_selector("div.mec-month-divider")) > 1:
+        # Will make sure that the button is present before trying to wait for it to be click-able, as this will otherwise timeout
+        if len(driver.find_elements_by_css_selector("div.mec-load-more-button")) > 0:
+            # Wait for the load more button to be clickable
+            loadMoreButton = wait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "div.mec-load-more-button")))
+            # If it is present, click it
+            if loadMoreButton:
+                loadMoreButton.click()
+                loadMore(driver)
+
 def scrapeEventPage(url, month=None, year=None, headless=True):
 
     # Setting the options for running the browser driver headlessly so it doesn't pop up when running the script
@@ -47,6 +60,7 @@ def scrapeEventPage(url, month=None, year=None, headless=True):
 
     if month and year:
         selectMonthAndYear(driver, month, year)
+        loadMore(driver)
 
     pageSource = driver.page_source
 
