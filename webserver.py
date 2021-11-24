@@ -37,7 +37,15 @@ def listAllEvents():
     with open("./allEvents.json") as eventFile:
         return Response(json.dumps(json.load(eventFile)), mimetype="application/json")
 
+@app.route("/nextEvents/<int:numberOfEvents>/")
+def listNextEvents(numberOfEvents):
+    with open("./allEvents.json") as eventFile:
+        allEvents = json.load(eventFile)
 
+    nextEvents = sorted([ event for event in allEvents if datetime.strptime(event['date'], '%d %b %Y') > datetime.now() ], key = lambda event : datetime.strptime(event['date'], '%d %b %Y'))[:numberOfEvents]
+
+
+    return Response(json.dumps(nextEvents), mimetype="application/json")
 
 if __name__ == '__main__':
     app.run(debug=True)
