@@ -162,4 +162,11 @@ def listEventsForAllTime():
     return eventDetailCollection
 
 if __name__ == "__main__":
-    listEventsForAllTime()
+    eventDetails = listEventsForAllTime()
+
+    for eventTime in eventDetails:
+        year, month = eventTime.split(";")
+        writeEventsToFile(year, month, eventDetails[eventTime])
+
+    with open(Path("./allEvents.json").resolve(), "w") as eventFile:
+        json.dump([ event for eventTime in eventDetails for event in eventDetails[eventTime] ], eventFile)
