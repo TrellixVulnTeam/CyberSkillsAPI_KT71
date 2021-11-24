@@ -105,7 +105,7 @@ def extractCurrentMonth(pageSoup):
 
         return pageSoup
 
-def extractEventDetails(pageSoup):
+def extractEventDetails(year, pageSoup):
 
     events = []
 
@@ -120,7 +120,8 @@ def extractEventDetails(pageSoup):
         currentEvent["description"] = eventBox.select("div.mec-event-description")[0].text.strip('\n')
 
         eventMetaData = eventBox.select("div.mec-event-meta")[0]
-        currentEvent["date"] = eventMetaData.select("div.mec-date-details")[0].text.strip('\n')
+        date = eventMetaData.select("div.mec-date-details")[0].text.strip("\n")
+        currentEvent["date"] = f'{date} {year}'
         currentEvent["time"] = eventMetaData.select("div.mec-time-details")[0].text.strip('\n')
         currentEvent["location"] = eventMetaData.select("div.mec-venue-details")[0].text.strip('\n')
 
@@ -154,7 +155,7 @@ def listEventsForAllTime():
         year = source.split(";")[0]
         month = source.split(";")[1]
         currentMonthSoup = extractCurrentMonth(bs(sourceCollection[source], "html.parser"))
-        writeEventsToFile(year, month, extractEventDetails(currentMonthSoup))
+        writeEventsToFile(year, month, extractEventDetails(year, currentMonthSoup))
 
 if __name__ == "__main__":
     listEventsForAllTime()
