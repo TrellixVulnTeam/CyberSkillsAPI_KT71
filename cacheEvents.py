@@ -151,11 +151,15 @@ def listEventsForAllTime():
 
     sourceCollection = scrapeEventPage(mainEventPage, month=details["month"], year=["2021"])
 
+    eventDetailCollection = {}
+
     for source in sourceCollection:
         year = source.split(";")[0]
-        month = source.split(";")[1]
         currentMonthSoup = extractCurrentMonth(bs(sourceCollection[source], "html.parser"))
-        writeEventsToFile(year, month, extractEventDetails(year, currentMonthSoup))
+        eventDetails = extractEventDetails(year, currentMonthSoup)
+        eventDetailCollection[source] = eventDetails
+
+    return eventDetailCollection
 
 if __name__ == "__main__":
     listEventsForAllTime()
