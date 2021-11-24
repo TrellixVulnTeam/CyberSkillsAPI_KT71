@@ -32,6 +32,11 @@ def sendEventsJSON(year, month):
 def listCurrentEvents():
     return redirect(url_for("sendEventsJSON", year=str(datetime.now().year), month=str(datetime.now().strftime("%B"))))
 
+@app.route("/allEvents/")
+def listAllEvents():
+    with open("./allEvents.json") as eventFile:
+        return Response(json.dumps(json.load(eventFile)), mimetype="application/json")
+
 
 
 if __name__ == '__main__':
