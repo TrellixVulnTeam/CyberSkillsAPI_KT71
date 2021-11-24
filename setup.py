@@ -9,6 +9,10 @@ import requests
 # For extracting the geckodriver
 import tarfile
 
+from pathlib import Path
+
+import json
+
 def createFolder(folderName):
     if not os.path.isdir(Path("./" + folderName)):
         try:
